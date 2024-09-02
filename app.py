@@ -31,7 +31,15 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)
         process_video(file.filename)
-        return redirect(url_for('uploaded_file', filename=file.filename))
+        return redirect(url_for('show_video', filename=file.filename))
+
+    
+
+@app.route('/show_video/<filename>')
+def show_video(filename):
+    processed_filename = os.path.splitext(filename)[0] + "_processed.avi"
+    return render_template('show_video.html', filename=processed_filename)
+
 
 def process_video(filename):
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -40,9 +48,10 @@ def process_video(filename):
     assert cap.isOpened(), "Error reading video file"
     w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
 
-    output_filename = os.path.splitext(filename)[0] + "_processed.avi"
+    output_filename = os.path.splitext(filename)[0] + "_processed.mp4"
     output_path = os.path.join(app.config['PROCESSED_FOLDER'], output_filename)
 
+    # Cambia el códec a H.264, que es más compatible con navegadores
     video_writer = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
 
     heatmap_obj = solutions.Heatmap(
@@ -62,11 +71,6 @@ def process_video(filename):
 
     cap.release()
     video_writer.release()
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    processed_filename = os.path.splitext(filename)[0] + "_processed.avi"
-    return send_from_directory(app.config['PROCESSED_FOLDER'], processed_filename)
 
 if __name__ == "__main__":
     app.run(debug=True)
