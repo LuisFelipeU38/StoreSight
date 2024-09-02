@@ -33,13 +33,14 @@ def upload_file():
         process_video(file.filename)
         return redirect(url_for('show_video', filename=file.filename))
 
-    
-
 @app.route('/show_video/<filename>')
 def show_video(filename):
-    processed_filename = os.path.splitext(filename)[0] + "_processed.avi"
+    processed_filename = os.path.splitext(filename)[0] + "_processed.mp4"
     return render_template('show_video.html', filename=processed_filename)
 
+@app.route('/processed/<filename>')
+def serve_processed_file(filename):
+    return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
 
 def process_video(filename):
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
