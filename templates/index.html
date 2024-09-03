@@ -3,13 +3,64 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Video</title>
+    <title>{% block title %}Upload Video{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        background-image: url('/static/fondo.png'); /* Ruta a la imagen de fondo */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center; /* Opcional: centrar la imagen */
+      }
+      .card {
+        background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
+      }
+      .btn-dark-gray {
+        background-color: #343a40; /* Gris oscuro */
+        border-color: #343a40; /* Gris oscuro para el borde */
+        color: #ffffff; /* Texto blanco */
+      }
+      .btn-dark-gray:hover {
+        background-color: #23272b; /* Gris aún más oscuro para el hover */
+        border-color: #1d2124; /* Gris aún más oscuro para el borde en hover */
+      }
+    </style>
   </head>
   <body>
-    <h1>Upload Video for Processing</h1>
-    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept="video/*">
-        <input type="submit" value="Upload">
-    </form>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('data') }}">Data</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Analysis</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+      {% block content %}
+      <!-- Contenido principal será inyectado aquí -->
+      {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
   </body>
 </html>
+

@@ -1,15 +1,20 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processed Video</title>
-  </head>
-  <body>
-    <h1>Processed Video</h1>
-    <video width="640" height="480" controls>
-        <source src="{{ url_for('serve_processed_file', filename=filename) }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-  </body>
-</html>
+{% extends "index.html" %}
+
+{% block title %}Processed Video{% endblock %}
+
+{% block content %}
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="text-center">Processed Video</h1>
+          <video width="100%" controls>
+            <source src="{{ url_for('serve_processed_file', filename=filename) }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

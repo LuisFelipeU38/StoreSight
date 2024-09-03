@@ -17,8 +17,12 @@ app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
 model = YOLO("yolov8n.pt")
 
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
+
+@app.route('/data')
+def data():
+    return render_template('data.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -31,12 +35,12 @@ def upload_file():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)
         process_video(file.filename)
-        return redirect(url_for('show_video', filename=file.filename))
+        processed_filename = os.path.splitext(file.filename)[0] + "_processed.mp4"
+        return redirect(url_for('show_video', filename=processed_filename))
 
 @app.route('/show_video/<filename>')
 def show_video(filename):
-    processed_filename = os.path.splitext(filename)[0] + "_processed.mp4"
-    return render_template('show_video.html', filename=processed_filename)
+    return render_template('show_video.html', filename=filename)
 
 @app.route('/processed/<filename>')
 def serve_processed_file(filename):
@@ -52,7 +56,6 @@ def process_video(filename):
     output_filename = os.path.splitext(filename)[0] + "_processed.mp4"
     output_path = os.path.join(app.config['PROCESSED_FOLDER'], output_filename)
 
-    # Cambia el códec a H.264, que es más compatible con navegadores
     video_writer = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
 
     heatmap_obj = solutions.Heatmap(
@@ -73,5 +76,6 @@ def process_video(filename):
     cap.release()
     video_writer.release()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
+
