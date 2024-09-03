@@ -1,18 +1,26 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
 import os
 import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+import base64
 from ultralytics import YOLO, solutions
 
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'uploads/'
 PROCESSED_FOLDER = 'processed/'
+PLOTS_FOLDER = 'plots/'
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
+os.makedirs(PLOTS_FOLDER, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
+app.config['PLOTS_FOLDER'] = PLOTS_FOLDER
+app.secret_key = 'your_secret_key_here'  # Necesario para usar sesiones
 
 model = YOLO("yolov8n.pt")
 
@@ -36,11 +44,20 @@ def upload_file():
         file.save(file_path)
         process_video(file.filename)
         processed_filename = os.path.splitext(file.filename)[0] + "_processed.mp4"
+        scatter_plot_base64 = generate_scatter_plot(processed_filename)
+        session['scatter_plot'] = scatter_plot_base64  # Store scatter plot in session
         return redirect(url_for('show_video', filename=processed_filename))
 
 @app.route('/show_video/<filename>')
 def show_video(filename):
     return render_template('show_video.html', filename=filename)
+
+@app.route('/analytics')
+def analytics():
+    scatter_plot = session.get('scatter_plot', None)
+    if scatter_plot is None:
+        return redirect(url_for('home'))
+    return render_template('analytics.html', scatter_plot=scatter_plot)
 
 @app.route('/processed/<filename>')
 def serve_processed_file(filename):
@@ -76,6 +93,59 @@ def process_video(filename):
     cap.release()
     video_writer.release()
 
+def generate_scatter_plot(filename):
+    video_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
+    cap = cv2.VideoCapture(video_path)
+
+    # Lee un frame del video para el análisis
+    success, frame = cap.read()
+    cap.release()
+
+    if not success:
+        return None
+
+    # Genera el mapa de calor
+    heatmap_obj = solutions.Heatmap(
+        colormap=cv2.COLORMAP_PARULA,
+        view_img=False,
+        shape="circle",
+        names=model.names,
+    )
+    results = model.track(frame, persist=True, show=False)
+    
+    # Obtén las coordenadas de los objetos detectados
+    coordinates = []
+    for result in results:
+        boxes = result.boxes
+        for box in boxes:
+            # Cada 'box' tiene un 'xyxy' atributo que contiene las coordenadas
+            x1, y1, x2, y2 = box.xyxy[0].tolist()
+            x_center = (x1 + x2) / 2
+            y_center = (y1 + y2) / 2
+            coordinates.append((x_center, y_center))
+
+    # Genera el scatter plot
+    if coordinates:
+        x_coords, y_coords = zip(*coordinates)
+    else:
+        x_coords = y_coords = []
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(x_coords, y_coords, c='red', marker='o', alpha=0.5)
+    plt.title('Scatter Plot of Detected Objects')
+    plt.xlabel('X Coordinate')
+    plt.ylabel('Y Coordinate')
+
+    # Guarda la figura en un buffer
+    buffer = io.BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    scatter_plot_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    plt.close()
+
+    return scatter_plot_base64
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
