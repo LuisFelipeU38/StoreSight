@@ -7,10 +7,11 @@
     <h1 class="text-center">Scatter Plot</h1>
     {% if scatter_plot %}
       <div class="text-center">
-        <img src="data:image/png;base64,{{ scatter_plot }}" alt="Scatter Plot" />
+        <img src="{{ url_for('serve_plot_file', filename=scatter_plot) }}" alt="Scatter Plot" />
       </div>
     {% else %}
       <p class="text-center">No scatter plot available.</p>
     {% endif %}
   </div>
 {% endblock %}
+
