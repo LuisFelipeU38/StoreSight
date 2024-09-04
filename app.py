@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import io
 import base64
 from ultralytics import YOLO, solutions
-import uuid
 
 app = Flask(__name__)
 
@@ -47,7 +46,6 @@ def upload_file():
         processed_filename = os.path.splitext(file.filename)[0] + "_processed.mp4"
         scatter_plot_base64 = generate_scatter_plot(processed_filename)
         session['scatter_plot'] = scatter_plot_base64  # Store scatter plot in session
-        print("Scatter Plot Stored in Session:", scatter_plot_base64[:100])
         return redirect(url_for('show_video', filename=processed_filename))
 
 @app.route('/show_video/<filename>')
@@ -63,11 +61,8 @@ def analytics():
 
 @app.route('/processed/<filename>')
 def serve_processed_file(filename):
-    try:
-        return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
-    except FileNotFoundError:
-        return "File not found", 404
-    
+    return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
+
 def process_video(filename):
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     cap = cv2.VideoCapture(video_path)
@@ -141,24 +136,16 @@ def generate_scatter_plot(filename):
     plt.xlabel('X Coordinate')
     plt.ylabel('Y Coordinate')
 
-    """ Guarda la figura en un buffer
+    # Guarda la figura en un buffer
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
     scatter_plot_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-    plt.close()"""
-
-    # Guarda la figura en un archivo temporal
-    scatter_plot_filename = f"{uuid.uuid4()}.png"
-    scatter_plot_path = os.path.join(app.config['PLOTS_FOLDER'], scatter_plot_filename)
-    plt.savefig(scatter_plot_path)
     plt.close()
 
-    return scatter_plot_filename
+    return scatter_plot_base64
 
-@app.route('/plots/<filename>')
-def serve_plot_file(filename):
-    return send_from_directory(app.config['PLOTS_FOLDER'], filename)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
