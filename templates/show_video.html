@@ -8,6 +8,15 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <h1 class="text-center">Processed Video</h1>
+
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-success">
+              {{ messages[0] }}
+            </div>
+          {% endif %}
+        {% endwith %}
+      
           <video width="100%" controls>
             <source src="{{ url_for('serve_processed_file', filename=filename) }}" type="video/mp4">
             Your browser does not support the video tag.

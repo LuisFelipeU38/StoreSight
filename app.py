@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session, flash
 import os
 import cv2
 import numpy as np
@@ -36,9 +36,11 @@ def data():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
+        flash('No file part')
         return redirect(request.url)
     file = request.files['file']
     if file.filename == '':
+        flash('No selected file')
         return redirect(request.url)
     if file:
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
@@ -47,6 +49,7 @@ def upload_file():
         processed_filename = os.path.splitext(file.filename)[0] + "_processed.mp4"
         scatter_plot_base64 = generate_scatter_plot(processed_filename)
         session['scatter_plot'] = scatter_plot_base64  # Store scatter plot in session
+        flash('The video has been uploaded and processed successfully')
         print("Scatter Plot Stored in Session:", scatter_plot_base64[:100])
         return redirect(url_for('show_video', filename=processed_filename))
 
