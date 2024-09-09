@@ -72,34 +72,56 @@ def serve_processed_file(filename):
         return "File not found", 404
     
 def process_video(filename):
-    video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    cap = cv2.VideoCapture(video_path)
+    try:
+        video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        output_filename = os.path.splitext(filename)[0] + "_processed.mp4"
+        output_path = os.path.join(app.config['PROCESSED_FOLDER'], output_filename)
+        os.makedirs(app.config['PROCESSED_FOLDER'], exist_ok=True)
+        cap = cv2.VideoCapture(video_path)
 
-    assert cap.isOpened(), "Error reading video file"
-    w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
+        if not cap.isOpened():
+            print(f"Error reading video file: {video_path}")
+            return None
+        
+        w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        fps = cap.get(cv2.CAP_PROP_FPS)
 
-    output_filename = os.path.splitext(filename)[0] + "_processed.mp4"
-    output_path = os.path.join(app.config['PROCESSED_FOLDER'], output_filename)
+        if not (w and h and fps):
+            print("Error obtaining video properties.")
+            cap.release()
+            return None
 
-    video_writer = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (w, h))
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        video_writer = cv2.VideoWriter(output_path, fourcc, fps, (w, h))
 
-    heatmap_obj = solutions.Heatmap(
-        colormap=cv2.COLORMAP_PARULA,
-        view_img=False,
-        shape="circle",
-        names=model.names,
-    )
+        heatmap_obj = solutions.Heatmap(
+            colormap=cv2.COLORMAP_PARULA,
+            view_img=False,
+            shape="circle",
+            names=model.names,
+        )
 
-    while cap.isOpened():
-        success, im0 = cap.read()
-        if not success:
-            break
-        tracks = model.track(im0, persist=True, show=False)
-        im0 = heatmap_obj.generate_heatmap(im0, tracks)
-        video_writer.write(im0)
+        while cap.isOpened():
+            success, im0 = cap.read()
+            if not success:
+                print("End of video or error reading frame.")
+                break
+            if im0 is not None:
+                tracks = model.track(im0, persist=True, show=False)
+                im0 = heatmap_obj.generate_heatmap(im0, tracks)
+                video_writer.write(im0)
+            else:
+                print("Skipped an empty frame.")
+                
+        cap.release()
+        video_writer.release()
+        print(f"Video processing completed: {output_path}")
+        return output_path
 
-    cap.release()
-    video_writer.release()
+    except Exception as e:
+        print(f"An error occurred during video processing: {e}")
+        return None
 
 def generate_scatter_plot(filename):
     video_path = os.path.join(app.config['PROCESSED_FOLDER'], filename)
