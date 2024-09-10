@@ -23,6 +23,8 @@ app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
 app.config['PLOTS_FOLDER'] = PLOTS_FOLDER
 app.secret_key = 'your_secret_key_here'  # Necesario para usar sesiones
 
+ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
+
 model = YOLO("yolov8n.pt")
 
 @app.route('/')
@@ -33,29 +35,45 @@ def home():
 def data():
     return render_template('data.html')
 
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    if 'file' not in request.files:
-        flash('No file part')
-        return redirect(request.url)
-    file = request.files['file']
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-    if file:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-        process_video(file.filename)
-        processed_filename = os.path.splitext(file.filename)[0] + "_processed.mp4"
-        scatter_plot_base64 = generate_scatter_plot(processed_filename)
-        session['scatter_plot'] = scatter_plot_base64  # Store scatter plot in session
-        flash('The video has been uploaded and processed successfully')
-        print("Scatter Plot Stored in Session:", scatter_plot_base64[:100])
-        return redirect(url_for('show_video', filename=processed_filename))
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/show_video/<filename>')
 def show_video(filename):
     return render_template('show_video.html', filename=filename)
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part', 'error')
+            return redirect(url_for('upload_file'))
+        
+        file = request.files['file']
+
+        if file.filename == '':
+            flash('No selected file', 'error')
+            return redirect(url_for('upload_file'))
+
+        if file and allowed_file(file.filename):
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(file_path)
+
+            process_video(file.filename)
+            processed_filename = os.path.splitext(file.filename)[0] + "_processed.mp4"
+
+            scatter_plot_base64 = generate_scatter_plot(processed_filename)
+            session['scatter_plot'] = scatter_plot_base64  # Store scatter plot in session
+
+            flash('The video has been uploaded and processed successfully')
+            print("Scatter Plot Stored in Session:", scatter_plot_base64[:100])
+
+            return redirect(url_for('show_video', filename=processed_filename))
+        else:
+            flash('Invalid file format. Please upload a video file.')
+            return redirect(url_for('upload_file'))
+        
+    return render_template('data.html')
 
 @app.route('/analytics')
 def analytics():
