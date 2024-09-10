@@ -231,5 +231,9 @@ def generate_scatter_plot(filename):
 
     return scatter_plot_filename
 
+@app.route('/plots/<filename>')
+def serve_plot_file(filename):
+    return send_from_directory(app.config['PLOTS_FOLDER'], filename)
+
 if __name__ == "__main__":
     app.run(debug=True)
