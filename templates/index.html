@@ -12,7 +12,7 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
-        background-position: center; /* Opcional: centrar la imagen */
+        background-position: center;
       }
       .card {
         background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente */
@@ -25,6 +25,28 @@
       .btn-dark-gray:hover {
         background-color: #23272b; /* Gris aún más oscuro para el hover */
         border-color: #1d2124; /* Gris aún más oscuro para el borde en hover */
+      }
+      .welcome-section {
+        margin-top: 50px;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+        border-radius: 15px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .welcome-section h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #343a40; /* Gris oscuro */
+      }
+      .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo-container img {
+        width: 100px; /* Ajusta el tamaño del logo según sea necesario */
       }
     </style>
   </head>
@@ -51,16 +73,18 @@
       </div>
     </nav>
     
-
-    <!-- Main Content -->
-    <div class="container">
-      {% block content %}
-      <!-- Contenido principal será inyectado aquí -->
-      <div class="mt-4">
-        <h1 class="text-center">Bienvenido, index.html</h1>
+   <!-- Main Content -->
+   <div class="container">
+    {% block content %}
+    <!-- Contenido principal será inyectado aquí -->
+    <div class="welcome-section text-center">
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="StoreSight Logo">
       </div>
-      {% endblock %}
+      <h1>Bienvenido a StoreSight</h1>
     </div>
+    {% endblock %}
+  </div>
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
