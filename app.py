@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session, flash, Response
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from ultralytics import YOLO, solutions
 import os
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import io
 import base64
-from ultralytics import YOLO, solutions
 import uuid
 import subprocess
 
@@ -19,15 +21,79 @@ PLOTS_FOLDER = 'StoreSight/plots/'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PLOTS_FOLDER, exist_ok=True)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PLOTS_FOLDER'] = PLOTS_FOLDER
 app.secret_key = 'your_secret_key_here'  # Necesario para usar sesiones
+
+db = SQLAlchemy(app)
 
 # Extensiones de archivo permitidas para subir
 ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
 
 # Carga del modelo YOLO
 model = YOLO("yolov8n.pt")
+
+# Modelo de usuario para la base de datos
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
+
+with app.app_context():
+    db.create_all()
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if User.query.filter_by(username=username).first():
+            flash('Username already exists!', 'danger')
+            return redirect(url_for('register'))
+
+        if password != confirm_password:
+            flash('Passwords do not match!', 'danger')
+            return redirect(url_for('register'))
+
+        new_user = User(username=username, password_hash=generate_password_hash(password))
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Registration successful! Please log in.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        user = User.query.filter_by(username=username).first()
+
+        if not user or not check_password_hash(user.password_hash, password):
+            flash('Invalid username or password!', 'danger')
+            return redirect(url_for('login'))
+
+        session['user'] = username
+        flash('Logged in successfully!', 'success')
+        return redirect(url_for('home'))
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('home'))
+
+@app.context_processor
+def inject_user():
+    return dict(logged_in='user' in session)
 
 def allowed_file(filename):
     """Verifica si la extensión del archivo es permitida."""
