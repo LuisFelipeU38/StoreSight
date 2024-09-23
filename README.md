@@ -15,12 +15,35 @@ Antes de ejecutar el proyecto, asegúrate de tener instaladas las siguientes dep
 
 1. **Clona el Repositorio:**
    ```bash
-   git clone https://github.com/usuario/repositorio.git
-   cd repositorio
-2. **Configura un Entorno Virtual (opcional pero recomendado):**
-  ```bash
-  python -m venv venv
-  source venv\Scripts\activate  # En Linux: venv/bin/activate
+   git clone https://github.com/LuisFelipeU38/StoreSight
+   cd StoreSight
+2. **Configura un Entorno Virtual:**
+   ```bash
+   python -m venv venv
+   source venv\Scripts\activate  # En Linux: venv/bin/activate
+3. **Asegurese de tener instalado pip:**
+   ```bash
+   pip install --upgrade pip
+**Luego instala las dependencias necesarias:**
+   ```bash
+   pip install flask
+   pip install yolov8
+   pip install ffmpeg-python
+```
+## Ejecución del Proyecto
+
+1. **Ejecuta la Aplicación Flask:**
+    ```bash
+    python app.py
+**Acceder a la app en `http://127.0.0.1:5000/`
+
+## Documentación
+La documentación del proyecto se ira actualizando estara disponible en la wiki del repositorio separada por sprints. Puedes consultar la documentación para obtener información detallada sobre el desarrollo, la arquitectura, y los cambios en cada sprint.
+- Spint 0: [📄](https://github.com/LuisFelipeU38/StoreSight/wiki/Sprint-0)
+- Sprint 1: [📄](https://github.com/LuisFelipeU38/StoreSight/wiki/Sprint-1)
+   
+ 
+
 
 
 
