@@ -1,0 +1,198 @@
+/* Fondo de la sección de encabezado */
+.hero-section {
+    background-image: url('/static/fondo.png');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    height: 60vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    width: 100vw; 
+    margin: 0; 
+    padding: 0;
+    left: 50%; 
+    right: 50%; 
+    transform: translateX(-50%);
+}
+
+/* Añadir una capa de color semitransparente */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Capa de oscuridad */
+    z-index: 1;
+}
+
+.hero-section h1, .hero-section p, .hero-section a {
+    position: relative;
+    z-index: 2;
+}
+
+.card {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    height: auto; /* Permitir que la altura sea automática para adaptarse al contenido */
+    min-height: 400px; /* Aumentar la altura mínima */
+    padding: 40px 20px; /* Aumentar padding vertical */
+    margin: 0 auto; /* Asegurar que esté centrado horizontalmente */
+    background-color: #ffffff; /* Fondo blanco */
+    text-align: center; /* Centrar el texto */
+}
+
+
+/* Color personalizado */
+:root {
+    --color-personalizado: #5d7b9e; /* Cambia el color verde a otro color */
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--color-personalizado); /* Color del navbar */
+}
+
+/* Contenido colapsable */
+#navbarToggleExternalContent {
+    background-color: rgba(93, 116, 87, 0.8); /* Color de fondo del contenido colapsable con más transparencia */
+}
+
+/* Clase para el contenido colapsable */
+.bg-color-personalizado {
+    background-color: rgba(93, 116, 87, 0.8); /* Color de fondo del contenido colapsable */
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, 0.7); /* Color del texto atenuado */
+}
+
+.navbar a {
+    color: white; /* Cambia el color del texto del navbar a blanco */
+}
+
+/* Estilos para el menú desplegable */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--color-personalizado);
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: white; /* Color del texto en el menú desplegable */
+    padding: 12px 16px; /* Espaciado interno */
+    text-decoration: none; /* Sin subrayado */
+    display: block; /* Cada opción en una línea */
+}
+
+/* Efecto hover en el menú desplegable */
+.dropdown-content a:hover {
+    background-color: #3b4f39; /* Color más oscuro */
+}
+
+html, body {
+    height: 100%; /* Asegura que el body y html ocupen el 100% de la altura */
+    margin: 0; /* Elimina el margen por defecto */
+}
+
+body {
+    display: flex; /* Usar flexbox para la disposición */
+    flex-direction: column; /* Apilar los elementos en columna */
+}
+
+/* Ajustar márgenes del contenedor */
+.container {
+    margin-top: 20px; /* Espacio por encima del contenedor */
+    margin-bottom: 30px; /* Espacio por debajo del contenedor */
+}
+
+/* Ajustar padding del footer */
+footer {
+    background-color: var(--color-personalizado); /* Cambia el color del pie de página si es necesario */
+    color: white; /* Color del texto del footer */
+    text-align: center; /* Centra el texto */
+    padding: 30px; /* Espaciado interno (ajustar a 40px para coincidir con el contenedor) */
+    position: relative; /* Posicionamiento relativo */
+}
+
+
+body {
+    background-color: #f8f9fa; /* Color de fondo claro */
+}
+
+.frame {
+    border: 3px solid #4a6c48;
+    border-radius: 10px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0px 0px 15px rgba(0, 123, 255, 0.2);
+    margin-bottom: 20px;
+}
+
+.table-summary {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-summary thead th {
+    background-color: #4a6c48;
+    color: white;
+    text-align: center;
+}
+
+.table-summary tbody td {
+    text-align: center;
+}
+
+.table-summary tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table-summary tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+.table-summary td, .table-summary th {
+    padding: 15px;
+}
+
+.btn-explore {
+    background-color: #5d7b9e;  /* Color de fondo azul */
+    color: white;                /* Color del texto en blanco */
+    border: none;                /* Sin borde */
+    padding: 10px 20px;         /* Espaciado interno */
+    border-radius: 5px;         /* Bordes redondeados */
+    text-decoration: none;       /* Sin subrayado */
+    font-weight: bold;           /* Texto en negrita */
+    display: inline-block;       /* Para permitir el espaciado */
+    transition: background-color 0.3s; /* Suaviza el cambio de color */
+}
+
+.btn-explore:hover {
+    background-color: #5d7b9e;  /* Mantiene el color azul al pasar el ratón */
+    color: white;                /* Mantiene el color del texto */
+}
+
+/* Si sigue sin funcionar, usa un selector más específico */
+.about-section .btn-explore {
+    background-color: #5d7b9e;  /* Color de fondo azul */
+    color: white;                /* Color del texto en blanco */
+}
+

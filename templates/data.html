@@ -7,7 +7,7 @@
     <div class="col-md-6">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h1 class="text-center">Upload Video for Processing</h1>
+          <h1 class="text-center" style="color: #5d7b9e;">Upload Video for Processing</h1>
 
           <div id="flash-messages">
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -27,12 +27,15 @@
               <input type="file" class="form-control" id="file" name="file" accept="video/*">
             </div>
             <div class="d-grid">
-              <button type="submit" class="btn btn-dark-gray btn-block">Upload</button>
+              <button type="submit" class="btn btn-explore">Upload</button>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+
+      <!-- Separador para el Footer -->
+      <div style="margin-top: 40px;"></div> <!-- Separación entre el contenido y el footer -->
 {% endblock %}
 

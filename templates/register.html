@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
   <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
-    <h2 class="text-center mb-4">Register</h2>
+    <h2 class="text-center mb-4" style="color: #5d7b9e;">Register</h2>
     <form method="POST" action="{{ url_for('register') }}">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
@@ -20,7 +20,7 @@
         <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
       </div>
       <div class="d-grid">
-        <button type="submit" class="btn btn-dark-gray">Sign up</button>
+        <button type="submit" class="btn btn-explore">Sign up</button>
       </div>
     </form>
     <p class="text-center mt-3">

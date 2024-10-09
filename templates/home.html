@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+    <!-- Encabezado con imagen y texto -->
+    <div class="hero-section">
+        <div class="header-content text-center">
+            <h1>StoreSight</h1>
+            <p>Optimizing store layouts through customer insights</p>
+            <!-- Botones de Login y Sign Up -->
+            <div class="mt-4">
+                <a href="/login" class="btn" style="background-color: #5d7b9e; color: white;">Login</a> <!-- Botón azul personalizado -->
+                <a href="/signup" class="btn btn-secondary mx-2">Sign Up</a> <!-- Botón gris -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección About -->
+    <section class="about-section text-center my-5" style="background-color: #f1f1f1; padding: 50px 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);">
+        <div class="container">
+            <h2 class="display-5" style="color: #5d7b9e;">About</h2>
+            <p class="lead" style="color: #333;">
+                StoreSight is an innovative platform designed to improve store layouts by leveraging customer insights and data analytics. We utilize modern technologies to provide actionable insights for retailers, enhancing customer engagement and sales.
+            </p>
+            <p class="lead" style="color: #333;">
+                Our mission is to empower businesses with the tools and knowledge needed to create optimal shopping experiences for their customers.
+            </p>
+            <a href="/data" class="btn btn-explore">Explore Data</a>
+        </div>
+    </section>
+
+    <!-- Separador para el Footer -->
+    <div style="margin-top: 40px;"></div> <!-- Separación entre el contenido y el footer -->
+
+{% endblock %}

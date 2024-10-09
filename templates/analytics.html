@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="container mt-5">
-    <h1 class="text-center">Scatter Plot</h1>
+    <h1 class="text-center" style="color: #5d7b9e;">Scatter Plot</h1>
     {% if scatter_plot %}
       <div class="text-center">
         <img src="{{ url_for('serve_plot_file', filename=scatter_plot) }}" alt="Scatter Plot" />

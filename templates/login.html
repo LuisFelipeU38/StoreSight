@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="container mt-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
-    <h2 class="text-center mb-4">Login</h2>
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%; height: 400px;"> <!-- Ajuste de altura -->
+    <h2 class="text-center mb-4" style="color: #5d7b9e;">Login</h2>
     <form method="POST" action="{{ url_for('login') }}">
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
@@ -16,7 +16,7 @@
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <div class="d-grid">
-        <button type="submit" class="btn btn-dark-gray">Log in</button>
+        <button type="submit" class="btn btn-explore">Log in</button>
       </div>
     </form>
     <p class="text-center mt-3">
