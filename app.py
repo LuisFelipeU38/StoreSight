@@ -138,33 +138,36 @@ def show_video(filename):
 def upload_file():
     """Maneja la carga y procesamiento del archivo de video."""
     if request.method == "POST":
-        # Verifica si hay un archivo en la solicitud
         if "file" not in request.files:
             flash("No file part", "error")
             return redirect(url_for("upload_file"))
 
         file = request.files["file"]
-
-        # Verifica si se seleccionó un archivo
         if file.filename == "":
             flash("No selected file", "error")
             return redirect(url_for("upload_file"))
 
-        # Si el archivo es válido, se guarda y procesa
         if file and allowed_file(file.filename):
             file_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
             file.save(file_path)
+            print(f"File saved: {file_path}")  # Verificación
 
             processed_video_path = process_video(file.filename)
+            if processed_video_path is None:
+                flash("Error processing video", "error")
+                return redirect(url_for("upload_file"))
+            print(f"Processed video path: {processed_video_path}")  # Verificación
+
             scatter_plot_base64 = generate_scatter_plot(
                 os.path.basename(processed_video_path)
             )
-            session["scatter_plot"] = (
-                scatter_plot_base64  # Guarda el gráfico en la sesión
-            )
+            if scatter_plot_base64 is None:
+                flash("Error generating scatter plot", "error")
+                return redirect(url_for("upload_file"))
+            print(f"Generated scatter plot: {scatter_plot_base64}")  # Verificación
 
+            session["scatter_plot"] = scatter_plot_base64
             flash("The video has been uploaded and processed successfully")
-
             return redirect(
                 url_for("show_video", filename=os.path.basename(processed_video_path))
             )
@@ -175,6 +178,7 @@ def upload_file():
     return render_template("data.html")
 
 
+
 @app.route("/analytics")
 def analytics():
     """Muestra el gráfico generado a partir del video."""
@@ -183,6 +187,32 @@ def analytics():
         return redirect(url_for("home"))
     return render_template("analytics.html", scatter_plot=scatter_plot)
 
+
+import os
+import subprocess
+import cv2
+
+def convert_to_mp4(input_path, output_path):
+    """Convierte un archivo de video AVI a MP4 usando FFmpeg."""
+    command = [
+        "ffmpeg",
+        "-i",
+        input_path,
+        "-vcodec",
+        "libx264",
+        "-acodec",
+        "aac",
+        "-strict",
+        "experimental",
+        "-pix_fmt",
+        "yuv420p",  # Asegura compatibilidad con la web
+        output_path,
+    ]
+    try:
+        subprocess.run(command, check=True)
+        print(f"Converted {input_path} to {output_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"FFmpeg error: {e}")
 
 def process_video(filename):
     """Procesa el video utilizando el modelo YOLO y genera un video de salida en formato AVI con códec XVID, luego lo convierte a MP4."""
@@ -237,6 +267,9 @@ def process_video(filename):
         mp4_path = os.path.join("static", mp4_filename)
         convert_to_mp4(avi_path, mp4_path)
 
+        if not os.path.exists(mp4_path):
+            print(f"Error: El archivo MP4 no se generó correctamente: {mp4_path}")
+
         print(f"MP4 video conversion completed: {mp4_path}")
 
         # Eliminar el archivo AVI
@@ -250,24 +283,6 @@ def process_video(filename):
         print(f"An error occurred during video processing: {e}")
         return None
 
-
-def convert_to_mp4(input_path, output_path):
-    """Convierte un archivo de video AVI a MP4 usando FFmpeg."""
-    command = [
-        "ffmpeg",
-        "-i",
-        input_path,
-        "-vcodec",
-        "libx264",
-        "-acodec",
-        "aac",
-        "-strict",
-        "experimental",
-        "-pix_fmt",
-        "yuv420p",  # Asegura compatibilidad con la web
-        output_path,
-    ]
-    subprocess.run(command, check=True)
 
 
 @app.route("/static/<filename>")
