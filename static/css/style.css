@@ -1,6 +1,6 @@
 /* Fondo de la sección de encabezado */
 .hero-section {
-    background-image: url('/static/fondo.png');
+    background-image: url('/static/images/fondo.png');
     background-size: cover;
     background-position: center;
     color: white;
@@ -49,7 +49,7 @@
 
 /* Color personalizado */
 :root {
-    --color-personalizado: #5d7b9e; /* Cambia el color verde a otro color */
+    --color-personalizado: #0077ff; /* Cambia el color verde a otro color */
 }
 
 /* Navbar */
