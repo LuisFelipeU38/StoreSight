@@ -5,20 +5,21 @@ Home
 {% endblock %}
 
 {% block content %}
-    <!-- Encabezado con imagen y texto -->
     <div class="hero-section">
         <div class="header-content text-center">
             <h1>StoreSight</h1>
             <p>Optimizing store layouts through customer insights</p>
-            <!-- Botones de Login y Sign Up -->
             <div class="mt-4">
-                <a href="/login" class="btn" style="background-color: #5d7b9e; color: white;">Login</a> <!-- Botón azul personalizado -->
-                <a href="/register" class="btn btn-secondary mx-2">Sign Up</a> <!-- Botón gris -->
+                {% if session['user'] %}
+                    <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn" style="background-color: #5d7b9e; color: white;">Login</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-secondary mx-2">Sign Up</a>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Sección About -->
     <section class="about-section text-center my-5" style="background-color: #f1f1f1; padding: 50px 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);">
         <div class="container">
             <h2 class="display-5" style="color: #5d7b9e;">About</h2>
@@ -32,7 +33,5 @@ Home
         </div>
     </section>
 
-    <!-- Separador para el Footer -->
-    <div style="margin-top: 40px;"></div> <!-- Separación entre el contenido y el footer -->
-
+    <div style="margin-top: 40px;"></div>
 {% endblock %}
