@@ -3,55 +3,133 @@
 {% block title %}Data{% endblock %}
 
 {% block content %}
-  <div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h1 class="text-center" style="color: #5d7b9e;">Upload Video for Processing</h1>
+  <div class="d-flex justify-content-center align-items-start vh-100" style="margin-top: 5vh;">
+    <!-- Cuadro con transparencia -->
+    <div class="card shadow-lg border-0" style="max-width: 400px; width: 100%; background-color: rgba(56, 60, 68, 0.8); border-radius: 15px;">
+      <div class="card-body p-4">
+        <h1 class="text-center mb-4" style="color: #ffffff;">Upload Video for Processing</h1>
 
-          <div id="flash-messages">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ 'success' if category == 'message' else 'danger' }}">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-            {% endwith %}
-          </div>
-
-          <form id="upload-form" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-              <label for="file" class="form-label">Select video file</label>
-              <input type="file" class="form-control" id="file" name="file" accept="video/*">
-            </div>
-            <div class="d-grid">
-              <button type="submit" class="btn btn-explore">Upload</button>
-            </div>
-          </form>
+        <div id="flash-messages">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ 'success' if category == 'message' else 'danger' }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% endwith %}
         </div>
+
+        <!-- Formulario de subida de archivos -->
+        <form id="upload-form" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="file" class="form-label" style="color: #ffffff;">Select Video File</label>
+            <input type="file" class="form-control" id="file" name="file" accept="video/*" required>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-dark btn-lg" style="background-color: #000000; border-color: #000000; color: #ffffff;">Upload</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 
   <!-- Pantalla de carga -->
-  <div id="loading-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); z-index: 1000;">
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-      <h2>Processing your video...</h2>
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-content text-center">
+      <h2 style="color: #ffffff;">Processing your video...</h2>
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
     </div>
   </div>
 
   <script>
-    document.getElementById('upload-form').onsubmit = function() {
-      // Mostrar pantalla de carga
+    // Mostrar pantalla de carga al enviar el formulario
+    document.getElementById('upload-form').onsubmit = function () {
       document.getElementById('loading-screen').style.display = 'block';
     };
   </script>
 
-  <!-- Separador para el Footer -->
-  <div style="margin-top: 40px;"></div> <!-- Separación entre el contenido y el footer -->
+  <style>
+    /* Eliminar márgenes y padding en el body y el html para evitar bordes */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden; /* Evitar desplazamiento horizontal */
+      box-sizing: border-box;
+      background-image: url('{{ url_for('static', filename='images/fondo.png') }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Forzar que todo el contenido se ajuste dentro de los límites */
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
+    /* Pantalla de carga */
+    .loading-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.85);
+      z-index: 1050;
+    }
+
+    .loading-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Ajustes de formulario */
+    .card {
+      border-radius: 15px;
+      background-color: rgba(56, 60, 68, 0.8); /* Gris oscuro con transparencia */
+    }
+
+    .form-control {
+      border: 1px solid #ffffff;
+      background-color: transparent;
+      color: #ffffff;
+    }
+
+    .form-control:focus {
+      border-color: #dddddd;
+      box-shadow: none;
+    }
+
+    /* Botones */
+    .btn-dark {
+      background-color: #000000;
+      border: none;
+      color: #ffffff;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    .btn-dark:hover {
+      background-color: #333333;
+    }
+
+    .btn-dark:active {
+      background-color: #222222;
+    }
+
+    /* Manejar el footer */
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
 {% endblock %}

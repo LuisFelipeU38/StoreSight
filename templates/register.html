@@ -3,29 +3,94 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="container mt-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
-    <h2 class="text-center mb-4" style="color: #5d7b9e;">Register</h2>
-    <form method="POST" action="{{ url_for('register') }}">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" required>
+  <div class="d-flex justify-content-center align-items-start vh-100" style="margin-top: 5vh;">
+    <!-- Cuadro con transparencia -->
+    <div class="card shadow-lg border-0" style="max-width: 400px; width: 100%; background-color: rgba(56, 60, 68, 0.8); border-radius: 15px;">
+      <div class="card-body p-4">
+        <h2 class="text-center mb-4" style="color: #ffffff;">Register</h2>
+
+        <form method="POST" action="{{ url_for('register') }}">
+          <div class="mb-3">
+            <label for="username" class="form-label" style="color: #ffffff;">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label" style="color: #ffffff;">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <div class="mb-3">
+            <label for="confirm_password" class="form-label" style="color: #ffffff;">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-dark btn-lg" style="background-color: #000000; border-color: #000000; color: #ffffff;">Sign up</button>
+          </div>
+        </form>
+        <p class="text-center mt-3" style="color: #ffffff;">
+          Already have an account? <a href="{{ url_for('login') }}" style="color: #5d7b9e;">Log in</a>
+        </p>
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-      </div>
-      <div class="mb-3">
-        <label for="confirm_password" class="form-label">Confirm Password</label>
-        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-      </div>
-      <div class="d-grid">
-        <button type="submit" class="btn btn-explore">Sign up</button>
-      </div>
-    </form>
-    <p class="text-center mt-3">
-      Already have an account? <a href="{{ url_for('login') }}">Log in</a>
-    </p>
+    </div>
   </div>
-</div>
+
+  <style>
+    /* Eliminar márgenes y padding en el body y el html para evitar bordes */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden; /* Evitar desplazamiento horizontal */
+      box-sizing: border-box;
+      background-image: url('{{ url_for('static', filename='images/fondo.png') }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Forzar que todo el contenido se ajuste dentro de los límites */
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
+    /* Ajustes de formulario */
+    .card {
+      border-radius: 15px;
+      background-color: rgba(56, 60, 68, 0.8); /* Gris oscuro con transparencia */
+    }
+
+    .form-control {
+      border: 1px solid #ffffff;
+      background-color: transparent;
+      color: #ffffff;
+    }
+
+    .form-control:focus {
+      border-color: #dddddd;
+      box-shadow: none;
+    }
+
+    /* Botones */
+    .btn-dark {
+      background-color: #000000;
+      border: none;
+      color: #ffffff;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    .btn-dark:hover {
+      background-color: #333333;
+    }
+
+    .btn-dark:active {
+      background-color: #222222;
+    }
+
+    /* Manejar el footer */
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
 {% endblock %}
