@@ -172,8 +172,9 @@ def upload_file():
                 url_for("show_video", filename=os.path.basename(processed_video_path))
             )
         else:
-            flash("Invalid file format. Please upload a video file.")
-            return redirect(url_for("upload_file"))
+            # Cambiar la redirección a render_template
+            flash("Invalid file format. Please upload a video file.", "error")
+            return render_template("data.html")  # Renderiza la misma página para mostrar el mensaje de error
 
     return render_template("data.html")
 
