@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import uuid
 import subprocess
 
+
 app = Flask(__name__, static_folder="static")
 
 # Carpetas para cargar videos y almacenar gráficos
@@ -174,10 +175,11 @@ def upload_file():
         else:
             # Cambiar la redirección a render_template
             flash("Invalid file format. Please upload a video file.", "error")
-            return render_template("data.html")  # Renderiza la misma página para mostrar el mensaje de error
+            return render_template(
+                "data.html"
+            )  # Renderiza la misma página para mostrar el mensaje de error
 
     return render_template("data.html")
-
 
 
 @app.route("/analytics")
@@ -188,10 +190,6 @@ def analytics():
         return redirect(url_for("home"))
     return render_template("analytics.html", scatter_plot=scatter_plot)
 
-
-import os
-import subprocess
-import cv2
 
 def convert_to_mp4(input_path, output_path):
     """Convierte un archivo de video AVI a MP4 usando FFmpeg."""
@@ -214,6 +212,7 @@ def convert_to_mp4(input_path, output_path):
         print(f"Converted {input_path} to {output_path}")
     except subprocess.CalledProcessError as e:
         print(f"FFmpeg error: {e}")
+
 
 def process_video(filename):
     """Procesa el video utilizando el modelo YOLO y genera un video de salida en formato AVI con códec XVID, luego lo convierte a MP4."""
@@ -285,7 +284,6 @@ def process_video(filename):
         return None
 
 
-
 @app.route("/static/<filename>")
 def serve_static_file(filename):
     file_path = os.path.join("static", filename)
@@ -307,7 +305,7 @@ def generate_scatter_plot(filename):
 
     if not success:
         return None
-    
+
     results = model.track(frame, persist=True, show=False)
 
     # Obtén las coordenadas de los objetos detectados
