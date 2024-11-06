@@ -4,13 +4,26 @@
 
 {% block content %}
   <div class="container mt-5">
-    <h1 class="text-center" style="color: #5d7b9e;">Scatter Plot</h1>
-    {% if scatter_plot %}
-      <div class="text-center">
-        <img src="{{ url_for('serve_plot_file', filename=scatter_plot) }}" alt="Scatter Plot" />
-      </div>
+    <h1 class="text-center" style="color: #5d7b9e;">Shelf Visits</h1>
+    {% if shelf_visits %}
+      <table class="table table-striped mt-4">
+        <thead>
+          <tr>
+            <th scope="col">Shelf</th>
+            <th scope="col">Visits</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for shelf, count in shelf_visits.items() %}
+            <tr>
+              <td>{{ shelf }}</td>
+              <td>{{ count }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     {% else %}
-      <p class="text-center">No scatter plot available.</p>
+      <p class="text-center">No shelf visit data available.</p>
     {% endif %}
   </div>
 {% endblock %}
