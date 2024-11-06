@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <style>
+    :root {
+        --primary-color: #0047abbd; /* Definir el color en una variable */
+    }
+
     /* Navbar estilizado */
     .navbar {
-        
-        background-color: #343a40d7 !important;
+        background-color: var(--primary-color) !important;
     }
 
     .navbar-brand {
-        font-family: 'Rozha One', serif;
         font-size: 3.3rem;
     }
 
@@ -36,29 +38,28 @@
     .navbar-nav .nav-link {
         color: rgba(255, 255, 255, 0.85);
     }
-    
+
     html, body {
-    margin: 0;
-    padding: 0;
-}
+        margin: 0;
+        padding: 0;
+    }
 
-.navbar {
-    margin-bottom: 0;
-    border-bottom: none;
-    box-shadow: none;
-}
+    .navbar {
+        margin-bottom: 0;
+        border-bottom: none;
+        box-shadow: none;
+    }
 
-.container {
-    margin-top: 0;
-}
-
+    .container {
+        margin-top: 0;
+    }
 
     .navbar-nav .nav-link:hover {
         color: #fff;
     }
 
     footer {
-        background-color: #343a40;
+        background-color: var(--primary-color);
         color: white;
         padding: 20px 0;
         text-align: center;
@@ -74,8 +75,8 @@
     }
 </style>
 <body>
-    <nav class="navbar navbar-dark bg-verde-militar">
-        <a class="navbar-brand" href="/">StoreSight</a>
+    <nav class="navbar navbar-dark">
+        <a class="navbar-brand" href="/">{% block navbar_title %}StoreSight{% endblock %}</a> <!-- Título del navbar que puede ser modificado en cada página -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -135,9 +136,3 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
-
-
-
-

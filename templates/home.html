@@ -1,8 +1,8 @@
 {% extends 'index.html' %}
 
-{% block title %}
-Home
-{% endblock %}
+{% block title %}Home{% endblock %}
+
+{% block navbar_title %}{% endblock %}  <!-- Este bloque está vacío para que no aparezca el título en el navbar -->
 
 {% block content %}
     <div class="hero-section">
@@ -13,7 +13,7 @@ Home
                 {% if session['user'] %}
                     <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="btn" style="background-color: #5d7b9e; color: white;">Login</a>
+                    <a href="{{ url_for('login') }}" class="btn" style="background-color: #4489d8; color: white;">Login</a>
                     <a href="{{ url_for('register') }}" class="btn btn-secondary mx-2">Sign Up</a>
                 {% endif %}
             </div>

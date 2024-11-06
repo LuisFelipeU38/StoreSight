@@ -37,7 +37,7 @@ ALLOWED_EXTENSIONS = {"mp4", "avi", "mov", "mkv"}
 # Variables de configuración
 OVERLAP_THRESHOLD = 0.1  # 10% de superposición para contar como una visita
 
-model = YOLO('/home/urqui/TrainModel/store_model.pt')
+model = YOLO('static/images/store_model.pt')
 
 # Modelo de usuario para la base de datos
 class User(db.Model):
@@ -188,7 +188,7 @@ def process_video(filename):
     os.makedirs("static", exist_ok=True)
 
     cap = cv2.VideoCapture(video_path)
-    model = YOLO('/home/urqui/TrainModel/store_model.pt')
+    model = YOLO('static/images/store_model.pt')
 
     if not cap.isOpened():
         print(f"Error reading video file: {video_path}")
